@@ -49,6 +49,11 @@ cd unfold
 # Clone Volatility 3 dependency
 git clone [https://github.com/volatilityfoundation/volatility3.git](https://github.com/volatilityfoundation/volatility3.git)
 
+# Install Python requirements from file
+pip3 install -r requirements.txt
+
+OR MANUAL
+
 # Install Python requirements
 pip3 install pytsk3 openai pyewf
 
