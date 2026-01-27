@@ -1,0 +1,6 @@
+# Core Forensic Libraries
+pytsk3
+pyewf  # For E01 (EnCase) image support
+
+# AI/API Libraries
+openai>=1.0  # Used for OpenRouter and DeepSeek connections
