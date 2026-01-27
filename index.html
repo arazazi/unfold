@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>UnfoldV2 | Unified Forensic Intelligence</title>
+    <title>Unfold | Unified Forensic Intelligence</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
@@ -113,7 +113,7 @@
     <aside id="sidebar" class="fixed inset-y-0 left-0 w-72 bg-slate-950/80 backdrop-blur-xl border-r border-slate-900 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 z-50">
         <div class="p-8 flex flex-col h-full">
             <div class="mb-10">
-                <div class="text-blue-500 font-black text-2xl tracking-tighter italic cyber-glow-blue">UNFOLD <span class="text-slate-500">V2</span></div>
+                <div class="text-blue-500 font-black text-2xl tracking-tighter italic cyber-glow-blue">UNFOLD <span class="text-slate-500"></span></div>
                 <div class="text-[10px] text-slate-500 uppercase tracking-[0.2em] font-bold">Forensic Intelligence</div>
             </div>
 
@@ -233,14 +233,14 @@
                 </h2>
                 <div class="bg-purple-900/10 border border-purple-500/20 rounded-3xl p-8">
                     <h4 class="text-xl font-bold text-white mb-4 italic">Pathing and Dependency</h4>
-                    <p class="text-slate-300 mb-6">UnfoldV2 requires Volatility 3 to function in <code>-vol</code> mode. It looks for a folder named <code class="text-purple-400">volatility3</code> containing <code class="text-purple-400">vol.py</code> in the <b>same directory</b> as the script for robust local execution.</p>
+                    <p class="text-slate-300 mb-6">Unfold requires Volatility 3 to function in <code>-vol</code> mode. It looks for a folder named <code class="text-purple-400">volatility3</code> containing <code class="text-purple-400">vol.py</code> in the <b>same directory</b> as the script for robust local execution.</p>
                     
                     <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
                         <div>
                             <span class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4 block">Required Directory Structure:</span>
                             <pre class="code-font text-xs text-slate-300 leading-relaxed">
 /Forensic-Tool-Folder/
-├── unfoldV2.py
+├── unfold.py
 └── <span class="text-green-400 font-bold">volatility3/</span>
     ├── vol.py
     └── ...</pre>
@@ -267,7 +267,7 @@
                     <div class="p-8 code-tabs">
                         <h4 class="text-blue-400 font-bold mb-4 uppercase text-xs">Disk Mapping (Standard Report)</h4>
                         <p class="text-sm text-slate-400 mb-4">Generates the full file structure. Use <code>--hash</code> for proof of integrity.</p>
-                        <pre class="text-yellow-500">python3 unfoldV2.py drive.dd --json --hash -o report.json</pre>
+                        <pre class="text-yellow-500">python3 unfold.py drive.dd --json --hash -o report.json</pre>
                     </div>
 
                     <div class="p-8 code-tabs" id="ai-commanding">
@@ -277,11 +277,11 @@
                             <button class="code-tab-button" onclick="showCodeTab(this, 'ai_output')">AI Generated & Executed</button>
                         </div>
                         <div class="code-tab-content active" id="ai_input">
-                            <pre class="code-font text-purple-300">python3 unfoldV2.py image.dd <span class="text-red-400">--extract DUMMY</span> -ai openrouter -p "Extract the file located at /root/flag.gz" -o flag.gz</pre>
+                            <pre class="code-font text-purple-300">python3 unfold.py image.dd <span class="text-red-400">--extract DUMMY</span> -ai openrouter -p "Extract the file located at /root/flag.gz" -o flag.gz</pre>
                         </div>
                         <div class="code-tab-content hidden" id="ai_output">
                             <pre class="code-font text-green-400">
-[!] AUTO EXECUTING DISK COMMAND: python3 unfoldV2.py image.dd --extract /root/flag.gz -o flag.gz
+[!] AUTO EXECUTING DISK COMMAND: python3 unfold.py image.dd --extract /root/flag.gz -o flag.gz
 --- AUTO-EXECUTION OUTPUT ---
 [+] JSON Map saved to flag.gz
 -----------------------------</pre>
@@ -293,11 +293,11 @@
                         <p class="text-sm text-slate-400 mb-4">The AI automatically cleans the input, generates the command, and executes it in a seamless nested call.</p>
                         <pre class="code-font text-xs text-slate-300 leading-relaxed">
 <span class="text-yellow-400"># 1. Initial Call (AI finds path)</span>
-python3 unfoldV2.py image.dd <span class="text-red-400">--extract DUMMY</span> -ai openrouter -p "extract desktop"
+python3 unfold.py image.dd <span class="text-red-400">--extract DUMMY</span> -ai openrouter -p "extract desktop"
 
 <span class="text-yellow-400"># 2. Internal Execution (The script runs this command itself)</span>
 subprocess.run(
-    "python3 unfoldV2.py image.dd <span class="text-blue-400">--extract /home/user/Desktop -o desktop.zip</span>" 
+    "python3 unfold.py image.dd <span class="text-blue-400">--extract /home/user/Desktop -o desktop.zip</span>" 
 )
 <span class="text-slate-500">// Note: The 'DUMMY' argument is dropped and replaced by the AI's determined path.</span></pre>
                     </div>
@@ -305,7 +305,7 @@ subprocess.run(
                     <div class="p-8 glass-card rounded-3xl" id="extraction-notes">
                         <h4 class="text-red-400 font-bold mb-4 uppercase text-xs">Credential Harvester</h4>
                         <p class="text-sm text-slate-400 mb-4">Use the <code>--creds</code> flag for specific hash extraction:</p>
-                        <pre class="text-red-400">python3 unfoldV2.py win_image.img --creds -o hashes.json</pre>
+                        <pre class="text-red-400">python3 unfold.py win_image.img --creds -o hashes.json</pre>
                         <p class="text-xs text-slate-500 mt-2">Outputs Linux hashes directly, or extracts Windows SAM/SYSTEM hives into a local folder for offline cracking.</p>
                     </div>
 
@@ -317,7 +317,7 @@ subprocess.run(
         <!-- Footer -->
         <footer class="border-t border-slate-900 bg-slate-950 px-8 py-20 text-center">
             <div class="flex flex-col items-center">
-                <div class="text-blue-500 font-black text-3xl italic mb-4">UNFOLD_V2</div>
+                <div class="text-blue-500 font-black text-3xl italic mb-4">UNFOLD</div>
                 <p class="text-slate-500 text-sm mb-8 max-w-sm">Professional Open Source Forensics. Built for the community.</p>
                 
                 <div class="flex space-x-6 mb-12">
