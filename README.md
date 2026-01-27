@@ -205,8 +205,8 @@ python3 unfold.py workstation.dd --extract DUMMY -ai openrouter -p "Extract the 
 
 ## 🤝 Connect & Support
 
-**Developer:** [Abdulrahman Alazazi](https://www.google.com/search?q=https://github.com/arazazi)
+**Developer:** [Abdulrahman Alazazi](https://github.com/arazazi)
 
-**Professional Network:** [LinkedIn Profile](https://www.google.com/search?q=https://www.linkedin.com/in/arazazi)
+**Professional Network:** [LinkedIn Profile](https://www.linkedin.com/in/arazazi)
 
 **License:** MIT | Built for the DFIR Community | 🛡️ Stay Ethical
