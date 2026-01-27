@@ -9,15 +9,6 @@
   <img src="https://img.shields.io/badge/AI-Powered-purple?style=for-the-badge&logo=openai" alt="AI Powered">
 </p>
 
-```text
- █    ██  ███▄    █   █████▒▒█████   ██▓    ▓█████▄ 
- ██  ▓██▒ ██ ▀█   █ ▓██   ▒▒██▒  ██▒▓██▒    ▒██▀ ██▌
-▓██  ▒██░▓██  ▀█ ██▒▒████ ░▒██░  ██▒▒██░    ░██   █▌
-▓▓█  ░██░▓██▒  ▐▌██▒░▓█▒  ░▒██   ██░▒██░    ░▓█▄   ▌
-▒▒█████▓ ▒██░   ▓██░░▒█░   ░ ████▓▒░░██████▒░▒████▓ 
-                                        | By Azazi
-
-```
 
 **Unfold** is a professional-grade forensic orchestration engine. It bridges the gap between raw disk images and memory dumps, utilizing Large Language Models (DeepSeek/OpenRouter) to translate natural language into complex, multi-step forensic actions.
 
