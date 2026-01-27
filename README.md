@@ -1,3 +1,5 @@
+<img width="1022" height="557" alt="image" src="https://github.com/user-attachments/assets/83076e1e-0c94-4c61-bda8-0306846debb9" />
+
 # 🕵️ UNFOLD: UNIFIED FORENSIC COMMAND CENTER
 
 <p align="center">
