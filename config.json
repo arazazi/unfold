@@ -1,0 +1,14 @@
+{
+    "API_KEYS": {
+        "OPENROUTER": "API-KEY">
+        "DEEPSEEK": "API-KEY">
+    },
+    
+    "TOOL_SETTINGS": {
+        "description": "Configuration for optional features like external API access.",
+
+        "MAX_AI_FILE_SIZE_READ": 102400,
+        "MAX_HASH_FILE_SIZE": 104857600
+    }
+}
+
