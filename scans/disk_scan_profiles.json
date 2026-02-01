@@ -1,0 +1,521 @@
+{
+  "metadata": {
+    "version": "3.0.0",
+    "last_updated": "2026-01-31",
+    "author": "UNFOLD Forensics Team",
+    "description": "Comprehensive disk forensics scan profiles for file system analysis",
+    "supported_types": ["disk", "filesystem", "image"]
+  },
+  
+  "disk_scan_profiles": {
+    "minimal": {
+      "description": "Quick filesystem overview (30 sec)",
+      "depth": 2,
+      "settings": {
+        "max_files": 1000,
+        "scan_deleted": false,
+        "hash_files": false,
+        "extract_metadata": true,
+        "scan_slack": false
+      },
+      "paths": [
+        "/",
+        "/home/*",
+        "/Users/*",
+        "/root",
+        "/etc",
+        "/var/log"
+      ],
+      "extensions": ["txt", "log", "conf", "ini"],
+      "find_credentials": false,
+      "find_secrets": false
+    },
+    
+    "triage": {
+      "description": "Quick incident response scan (2-5 min)",
+      "depth": 3,
+      "settings": {
+        "max_files": 5000,
+        "scan_deleted": false,
+        "hash_files": true,
+        "extract_metadata": true,
+        "scan_slack": false
+      },
+      "paths": [
+        "/",
+        "/home/*",
+        "/Users/*",
+        "/root",
+        "/etc",
+        "/var/log",
+        "/tmp",
+        "/Windows/System32/config",
+        "/Windows/Prefetch",
+        "*/Desktop/*",
+        "*/Downloads/*",
+        "*/Documents/*"
+      ],
+      "extensions": ["txt", "log", "conf", "sh", "bat", "ps1", "exe", "dll"],
+      "find_credentials": true,
+      "find_secrets": true
+    },
+    
+    "forensics": {
+      "description": "Standard forensic investigation (5-10 min)",
+      "depth": 5,
+      "settings": {
+        "max_files": 20000,
+        "scan_deleted": true,
+        "hash_files": true,
+        "extract_metadata": true,
+        "scan_slack": true
+      },
+      "paths": [
+        "/",
+        "/home/**",
+        "/Users/**",
+        "/root/**",
+        "/etc/**",
+        "/var/**",
+        "/tmp/**",
+        "/opt/**",
+        "/Windows/**",
+        "/Program Files/**",
+        "/ProgramData/**"
+      ],
+      "extensions": ["*"],
+      "find_credentials": true,
+      "find_secrets": true,
+      "timeline": true
+    },
+    
+    "full": {
+      "description": "Comprehensive deep scan (15-30 min)",
+      "depth": -1,
+      "settings": {
+        "max_files": -1,
+        "scan_deleted": true,
+        "hash_files": true,
+        "extract_metadata": true,
+        "scan_slack": true,
+        "carve_files": true
+      },
+      "paths": ["/**"],
+      "extensions": ["*"],
+      "find_credentials": true,
+      "find_secrets": true,
+      "timeline": true,
+      "extract_artifacts": true
+    },
+    
+    "ctf": {
+      "description": "CTF competition mode - flag hunting",
+      "depth": 5,
+      "settings": {
+        "max_files": 10000,
+        "scan_deleted": true,
+        "hash_files": false,
+        "extract_metadata": true,
+        "scan_slack": true
+      },
+      "paths": [
+        "/**"
+      ],
+      "extensions": ["txt", "flag", "md", "log", "conf", "sh", "py", "zip", "jpg", "png"],
+      "find_credentials": false,
+      "find_secrets": true,
+      "flag_patterns": [
+        "CTF\\{[^}]+\\}",
+        "FLAG\\{[^}]+\\}",
+        "flag\\{[^}]+\\}",
+        "HTB\\{[^}]+\\}",
+        "PICO\\{[^}]+\\}",
+        "[A-F0-9]{32}",
+        "[A-F0-9]{40}"
+      ],
+      "search_strings": ["flag", "password", "secret", "key", "ctf"]
+    },
+    
+    "malware": {
+      "description": "Malware and suspicious file detection",
+      "depth": 5,
+      "settings": {
+        "max_files": 15000,
+        "scan_deleted": true,
+        "hash_files": true,
+        "extract_metadata": true,
+        "scan_slack": true
+      },
+      "paths": [
+        "/tmp/**",
+        "/var/tmp/**",
+        "/dev/shm/**",
+        "/home/*/.config/**",
+        "/home/*/.local/**",
+        "/Users/*/AppData/**",
+        "/Users/*/Library/**",
+        "/Windows/Temp/**",
+        "/Windows/System32/**",
+        "/Windows/SysWOW64/**",
+        "/ProgramData/**"
+      ],
+      "extensions": ["exe", "dll", "so", "dylib", "sh", "bat", "ps1", "vbs", "js"],
+      "find_credentials": false,
+      "find_secrets": false,
+      "suspicious_patterns": true
+    },
+    
+    "persistence": {
+      "description": "Hunt for persistence mechanisms",
+      "depth": 4,
+      "settings": {
+        "max_files": 5000,
+        "scan_deleted": false,
+        "hash_files": true,
+        "extract_metadata": true,
+        "scan_slack": false
+      },
+      "paths": [
+        "/etc/cron.*/**",
+        "/etc/systemd/**",
+        "/etc/init.d/**",
+        "/var/spool/cron/**",
+        "/home/*/.config/autostart/**",
+        "/Windows/System32/Tasks/**",
+        "/Users/*/AppData/Roaming/Microsoft/Windows/Start Menu/**",
+        "/ProgramData/Microsoft/Windows/Start Menu/**",
+        "/Library/LaunchDaemons/**",
+        "/Library/LaunchAgents/**",
+        "*/Startup/**"
+      ],
+      "extensions": ["*"],
+      "find_credentials": false,
+      "find_secrets": false
+    },
+    
+    "credentials": {
+      "description": "Extract credential files and secrets",
+      "depth": 4,
+      "settings": {
+        "max_files": 5000,
+        "scan_deleted": true,
+        "hash_files": true,
+        "extract_metadata": true,
+        "scan_slack": true
+      },
+      "paths": [
+        "/etc/passwd",
+        "/etc/shadow",
+        "/etc/security/**",
+        "/home/*/.ssh/**",
+        "/root/.ssh/**",
+        "/Windows/System32/config/SAM",
+        "/Windows/System32/config/SYSTEM",
+        "/Windows/System32/config/SECURITY",
+        "/Users/*/.ssh/**",
+        "/Users/*/AppData/Local/**",
+        "/Users/*/AppData/Roaming/**"
+      ],
+      "extensions": ["*"],
+      "find_credentials": true,
+      "find_secrets": true,
+      "extract_passwords": true
+    },
+    
+    "browser": {
+      "description": "Browser artifacts and history",
+      "depth": 3,
+      "settings": {
+        "max_files": 3000,
+        "scan_deleted": false,
+        "hash_files": false,
+        "extract_metadata": true,
+        "scan_slack": false
+      },
+      "paths": [
+        "/home/*/.mozilla/**",
+        "/home/*/.config/google-chrome/**",
+        "/home/*/.config/chromium/**",
+        "/Users/*/Library/Application Support/Firefox/**",
+        "/Users/*/Library/Application Support/Google/Chrome/**",
+        "/Users/*/Library/Safari/**",
+        "/Users/*/AppData/Local/Google/Chrome/**",
+        "/Users/*/AppData/Local/Microsoft/Edge/**",
+        "/Users/*/AppData/Roaming/Mozilla/Firefox/**"
+      ],
+      "extensions": ["sqlite", "db", "json", "log"],
+      "find_credentials": true,
+      "find_secrets": false,
+      "extract_history": true
+    },
+    
+    "user_activity": {
+      "description": "User activity and recent files",
+      "depth": 3,
+      "settings": {
+        "max_files": 5000,
+        "scan_deleted": false,
+        "hash_files": false,
+        "extract_metadata": true,
+        "scan_slack": false
+      },
+      "paths": [
+        "*/Desktop/**",
+        "*/Downloads/**",
+        "*/Documents/**",
+        "*/Pictures/**",
+        "*/Videos/**",
+        "/home/*/.bash_history",
+        "/home/*/.zsh_history",
+        "/root/.bash_history",
+        "/Users/*/AppData/Roaming/Microsoft/Windows/Recent/**",
+        "/Users/*/AppData/Local/Microsoft/Windows/Explorer/**"
+      ],
+      "extensions": ["*"],
+      "find_credentials": false,
+      "find_secrets": true,
+      "timeline": true
+    },
+    
+    "logs": {
+      "description": "System and application logs",
+      "depth": 3,
+      "settings": {
+        "max_files": 10000,
+        "scan_deleted": false,
+        "hash_files": false,
+        "extract_metadata": true,
+        "scan_slack": false
+      },
+      "paths": [
+        "/var/log/**",
+        "/var/spool/**",
+        "/Windows/System32/winevt/Logs/**",
+        "/Windows/Logs/**",
+        "/ProgramData/*/Logs/**"
+      ],
+      "extensions": ["log", "evtx", "txt", "journal"],
+      "find_credentials": false,
+      "find_secrets": false,
+      "parse_logs": true
+    },
+    
+    "email": {
+      "description": "Email and communication artifacts",
+      "depth": 4,
+      "settings": {
+        "max_files": 5000,
+        "scan_deleted": true,
+        "hash_files": true,
+        "extract_metadata": true,
+        "scan_slack": false
+      },
+      "paths": [
+        "/home/*/.thunderbird/**",
+        "/home/*/.evolution/**",
+        "/Users/*/Library/Mail/**",
+        "/Users/*/Documents/Outlook Files/**",
+        "/Users/*/AppData/Local/Microsoft/Outlook/**"
+      ],
+      "extensions": ["pst", "ost", "msg", "eml", "mbox"],
+      "find_credentials": false,
+      "find_secrets": true
+    },
+    
+    "documents": {
+      "description": "Document and file recovery",
+      "depth": 5,
+      "settings": {
+        "max_files": 20000,
+        "scan_deleted": true,
+        "hash_files": false,
+        "extract_metadata": true,
+        "scan_slack": false
+      },
+      "paths": [
+        "*/Desktop/**",
+        "*/Documents/**",
+        "*/Downloads/**",
+        "/home/**",
+        "/Users/**"
+      ],
+      "extensions": ["pdf", "doc", "docx", "xls", "xlsx", "ppt", "pptx", "txt", "odt", "ods", "odp"],
+      "find_credentials": false,
+      "find_secrets": true,
+      "extract_text": true
+    },
+    
+    "network": {
+      "description": "Network configuration and artifacts",
+      "depth": 2,
+      "settings": {
+        "max_files": 1000,
+        "scan_deleted": false,
+        "hash_files": false,
+        "extract_metadata": true,
+        "scan_slack": false
+      },
+      "paths": [
+        "/etc/network/**",
+        "/etc/NetworkManager/**",
+        "/etc/hosts",
+        "/etc/resolv.conf",
+        "/var/log/syslog",
+        "/Windows/System32/config/netsetup.log",
+        "/Windows/System32/drivers/etc/**"
+      ],
+      "extensions": ["conf", "log", "txt"],
+      "find_credentials": false,
+      "find_secrets": false
+    },
+    
+    "registry": {
+      "description": "Windows Registry hives",
+      "depth": 2,
+      "settings": {
+        "max_files": 100,
+        "scan_deleted": false,
+        "hash_files": true,
+        "extract_metadata": true,
+        "scan_slack": false
+      },
+      "paths": [
+        "/Windows/System32/config/SAM",
+        "/Windows/System32/config/SYSTEM",
+        "/Windows/System32/config/SOFTWARE",
+        "/Windows/System32/config/SECURITY",
+        "/Windows/System32/config/DEFAULT",
+        "/Users/*/NTUSER.DAT",
+        "/Users/*/AppData/Local/Microsoft/Windows/UsrClass.dat"
+      ],
+      "extensions": ["*"],
+      "find_credentials": true,
+      "find_secrets": false,
+      "parse_registry": true
+    },
+    
+    "deleted": {
+      "description": "Deleted file recovery",
+      "depth": 5,
+      "settings": {
+        "max_files": 30000,
+        "scan_deleted": true,
+        "hash_files": true,
+        "extract_metadata": true,
+        "scan_slack": true,
+        "carve_files": true
+      },
+      "paths": ["/**"],
+      "extensions": ["*"],
+      "find_credentials": false,
+      "find_secrets": false,
+      "deleted_only": true
+    },
+    
+    "timeline": {
+      "description": "Complete filesystem timeline",
+      "depth": -1,
+      "settings": {
+        "max_files": -1,
+        "scan_deleted": true,
+        "hash_files": false,
+        "extract_metadata": true,
+        "scan_slack": false
+      },
+      "paths": ["/**"],
+      "extensions": ["*"],
+      "find_credentials": false,
+      "find_secrets": false,
+      "timeline": true,
+      "sort_by_time": true
+    },
+    
+    "anti_forensics": {
+      "description": "Detect anti-forensic techniques",
+      "depth": 5,
+      "settings": {
+        "max_files": 10000,
+        "scan_deleted": true,
+        "hash_files": true,
+        "extract_metadata": true,
+        "scan_slack": true
+      },
+      "paths": [
+        "/**/$MFT",
+        "/**/$LogFile",
+        "/**/$UsnJrnl",
+        "/var/log/**",
+        "/Windows/Prefetch/**"
+      ],
+      "extensions": ["*"],
+      "find_credentials": false,
+      "find_secrets": false,
+      "detect_timestomp": true,
+      "detect_wiping": true
+    }
+  },
+  
+  "output_formats": {
+    "json": {
+      "description": "Structured JSON output",
+      "file_extension": ".json",
+      "includes": ["files", "metadata", "hashes", "timeline"]
+    },
+    "html": {
+      "description": "Interactive HTML report",
+      "file_extension": ".html",
+      "includes": ["summary", "files", "flags", "credentials", "timeline"]
+    },
+    "csv": {
+      "description": "CSV spreadsheet",
+      "file_extension": ".csv",
+      "includes": ["files", "metadata", "hashes"]
+    },
+    "timeline": {
+      "description": "Timeline format (bodyfile)",
+      "file_extension": ".bodyfile",
+      "includes": ["timeline"]
+    }
+  },
+  
+  "search_patterns": {
+    "flags": [
+      "CTF\\{[^}]+\\}",
+      "FLAG\\{[^}]+\\}",
+      "flag\\{[^}]+\\}",
+      "HTB\\{[^}]+\\}",
+      "PICO\\{[^}]+\\}",
+      "DUCTF\\{[^}]+\\}",
+      "[A-F0-9]{32}",
+      "[A-F0-9]{40}",
+      "[A-F0-9]{64}"
+    ],
+    "credentials": [
+      "password",
+      "passwd",
+      "pwd",
+      "secret",
+      "key",
+      "token",
+      "api_key",
+      "apikey"
+    ],
+    "secrets": [
+      "BEGIN RSA PRIVATE KEY",
+      "BEGIN DSA PRIVATE KEY",
+      "BEGIN EC PRIVATE KEY",
+      "BEGIN OPENSSH PRIVATE KEY",
+      "BEGIN PGP PRIVATE KEY",
+      "aws_access_key_id",
+      "aws_secret_access_key"
+    ],
+    "suspicious": [
+      ".bash_history",
+      ".zsh_history",
+      "shadow",
+      "passwd",
+      "authorized_keys",
+      "known_hosts"
+    ]
+  }
+}
