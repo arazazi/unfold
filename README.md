@@ -1,210 +1,237 @@
-<img width="1022" height="557" alt="image" src="https://github.com/user-attachments/assets/b5695c31-4825-4645-9e4b-3a45b7b727b8" />
+<img width="1633" height="714" alt="image" src="https://github.com/user-attachments/assets/43f8edad-c670-409b-9a76-785768c86399" />
 
-# 🕵️ UNFOLD: UNIFIED FORENSIC COMMAND CENTER
+# 🔍 UNFOLD v3.0 ULTRA
+
+> **The Ultimate Forensic Investigation Suite**  
+> Professional disk & memory forensics tool with AI-powered analysis, beautiful HTML reports, and CTF-optimized workflows.
 
 <p align="center">
-  <img src="https://img.shields.io/badge/Python-3.13%2B-blue?style=for-the-badge&logo=python" alt="Python Version">
-  <img src="https://img.shields.io/badge/Platform-Linux%20%7C%20macOS-lightgrey?style=for-the-badge" alt="Platform">
-  <img src="https://img.shields.io/badge/License-MIT-green?style=for-the-badge" alt="License">
-  <img src="https://img.shields.io/badge/AI-Powered-purple?style=for-the-badge&logo=openai" alt="AI Powered">
+  <img src="https://img.shields.io/badge/version-3.0.0--ULTRA-blue?style=for-the-badge" alt="Version">
+  <img src="https://img.shields.io/badge/python-3.8+-green?style=for-the-badge" alt="Python">
+  <img src="https://img.shields.io/badge/platform-Linux%20%7C%20Windows%20%7C%20macOS-lightgrey?style=for-the-badge" alt="Platform">
+  <img src="https://img.shields.io/badge/license-MIT-orange?style=for-the-badge" alt="License">
 </p>
 
+---
 
-**Unfold** is a professional-grade forensic orchestration engine. It bridges the gap between raw disk images and memory dumps, utilizing Large Language Models (DeepSeek/OpenRouter) to translate natural language into complex, multi-step forensic actions.
+## ✨ Features
+
+### 🧠 **Memory Forensics**
+- **22 specialized profiles** for Windows & Linux memory analysis
+- Powered by **Volatility 3** with smart auto-detection
+- CTF competition mode with auto flag detection
+- APT hunting, ransomware detection, malware analysis
+
+### 💾 **Disk Forensics** 
+- **18 specialized profiles** for filesystem analysis
+- **Smart filesystem detection** - auto-detects NTFS, EXT4, FAT32, etc.
+- **Interactive HTML reports** with file download buttons
+- Credential extraction, deleted file recovery, timeline generation
+
+### 🤖 **AI Integration**
+- Natural language forensic commands
+- OpenRouter & DeepSeek API support
+- AI-powered evidence analysis
+
+### 📊 **Professional Reports**
+- Beautiful interactive HTML reports
+- Download files directly from browser
+- Search & filter capabilities
+- Export to JSON, CSV, timeline formats
 
 ---
 
-## 🚀 Core Capabilities
+## 🚀 Quick Start
 
-| Feature | Technical Implementation |
-| --- | --- |
-| **Resilient Disk Mapping** | Direct block-level access via `pytsk3` with manual FAT/NTFS mounting overrides. |
-| **AI Orchestration** | Translates natural language queries into precise `unfold` or `volatility` CLI syntax. |
-| **Contextual Awareness** | Dynamically scrapes local Volatility 3 plugins to prevent AI hallucinations. |
-| **Session Persistence** | Tracks progress via `.session` files for reliable analysis of multi-TB images. |
-| **Smart Noise Filtering** | Automatically excludes OS "noise" (`/proc`, `/dev`, `/sys`) to focus on human artifacts. |
-
----
-
-## 🛠️ Installation & Setup
-
-### 1. System Prerequisites
-
-Ensure your host system has the development headers for SleuthKit and LibEWF.
+### Installation
 
 ```bash
-# Ubuntu / Kali / Debian
-sudo apt update && sudo apt install -y libtsk-dev libewf-dev python3-pip python3-dev
-
-```
-
-### 2. Deployment
-
-Unfold acts as a wrapper. For memory analysis, **Volatility 3** must be present in the root directory.
-
-```bash
-git clone [https://github.com/arazazi/unfold.git](https://github.com/arazazi/unfold.git)
+# Clone the repository
+git clone https://github.com/arazazi/unfold.git
 cd unfold
 
-# Clone Volatility 3 dependency
-git clone [https://github.com/volatilityfoundation/volatility3.git](https://github.com/volatilityfoundation/volatility3.git)
+# Run setup (creates directories, installs profiles)
+chmod +x DEPLOY.sh
+./DEPLOY.sh
 
-# Install Python requirements from file
-pip3 install -r requirements.txt
-
-OR MANUAL
-
-# Install Python requirements
-pip3 install pytsk3 openai pyewf
-
+# Check dependencies
+python3 unfoldV3.py --check-deps
 ```
 
-### 3. API Configuration
+### Basic Usage
 
-Create a `config.json` in the root directory:
+```bash
+# Memory Analysis (Windows)
+python3 unfoldV3.py memory.dmp --scan triage --html -o report.html
 
-```json
-{
-    "API_KEYS": {
-        "OPENROUTER": "your_key",
-        "DEEPSEEK": "your_key"
-    }
-}
+# Disk Analysis (any filesystem)
+python3 unfoldV3.py disk.dd --scan-disk ctf --html -o disk_report.html
 
+# Extract file from disk
+python3 unfoldV3.py disk.dd --extract /path/to/file.txt -o output.txt
+
+# Traditional modes
+python3 unfoldV3.py disk.dd --json -o filesystem.json
+python3 unfoldV3.py disk.dd --creds -o credentials.json
 ```
 
 ---
 
-## 📋 Flag Reference
+## 🎯 Scan Profiles
 
-| Flag | Argument | Description |
-| --- | --- | --- |
-| `--json` | - | Generates a full recursive JSON map of the filesystem. |
-| `--extract` | `PATH` | Extracts a specific file from the image (requires `-o`). |
-| `--creds` | - | Automated harvesting of shadow hashes or SAM/SYSTEM hives. |
-| `-vol` | - | Activates Volatility 3 interactive or AI-guided mode. |
-| `-p` | `QUERY` | **Natural Language Prompt** for AI-guided hunting. |
-| `--hash` | - | Generates SHA256 for all files (Forensic Integrity). |
-| `--resume` | - | Resumes a scan from the last saved `.session`. |
+### Memory Scans (`--scan`)
+
+| Profile | Speed | Description |
+|---------|-------|-------------|
+| `minimal` | 30s | Quick system overview |
+| `triage` | 2-5m | Incident response essentials |
+| `malware` | 5-10m | Deep malware detection |
+| `ctf_windows` | 2-5m | CTF flag hunting (Windows) |
+| `ctf_linux` | 2-5m | CTF flag hunting (Linux) |
+| `apt_hunting` | 10-15m | Advanced persistent threats |
+| `ransomware` | 5-10m | Ransomware indicators |
+| `full` | 10-30m | Comprehensive analysis |
+
+**22 total profiles available** - [View all →](Documentation.md)
+
+### Disk Scans (`--scan-disk`)
+
+| Profile | Speed | Description |
+|---------|-------|-------------|
+| `triage` | 2-5m | Quick filesystem overview |
+| `ctf` | 3-5m | CTF flag hunting with auto-detection |
+| `credentials` | 3-5m | Password & key extraction |
+| `malware` | 5-10m | Suspicious file detection |
+| `browser` | 2-3m | Browser artifacts & history |
+| `deleted` | 10-20m | Deleted file recovery |
+| `timeline` | 15-30m | Complete MAC timeline |
+
+**18 total profiles available** - [View all →](Documentation.md)
 
 ---
 
-## 💡 Practical Examples & Scenarios
+## 💡 Use Cases
 
-### 📂 Disk Forensics (Storage Analysis)
-
-**Scenario 1: High-Speed Fast Mapping (Metadata Only)** Map a 2TB drive quickly by ignoring system noise and skipping file contents to generate a structural report.
-
+### 🏆 CTF Competitions
 ```bash
-python3 unfold.py image.dd --json -o structure_report.json
+# Auto-detect flags in memory
+python3 unfoldV3.py ctf.dmp --scan ctf_windows --html -o flags.html
 
+# Auto-detect flags in disk
+python3 unfoldV3.py ctf.dd --scan-disk ctf --html -o disk_flags.html
+
+# Automatically searches for: CTF{}, FLAG{}, HTB{}, MD5, SHA1, SHA256
 ```
 
-**Scenario 2: Deep Web Server Investigation** Scan a Linux server image, calculate SHA256 for integrity, and ingest the contents of configuration and environment files to find hidden backdoors.
-
+### 🔐 Incident Response
 ```bash
-python3 unfold.py server_disk.img --json --hash -r "conf,env,htaccess,php,sh" -o breach_analysis.json
+# Quick triage
+python3 unfoldV3.py suspect.dmp --scan triage --html -o triage.html
 
+# Hunt for persistence
+python3 unfoldV3.py disk.dd --scan-disk persistence --html -o backdoors.html
+
+# Extract credentials
+python3 unfoldV3.py disk.dd --scan-disk credentials --html -o creds.html
 ```
 
-**Scenario 3: Targeted Artifact Extraction** You have the path from a previous scan; now pull the specific Windows Registry hive for offline analysis.
-
+### 🕵️ Digital Forensics
 ```bash
-python3 unfold.py win_c_drive.e01 --extract "/Windows/System32/config/SAM" -o SAM_hive.bak
+# Generate complete timeline
+python3 unfoldV3.py evidence.dd --scan-disk timeline --timeline -o timeline.bodyfile
 
-```
+# Browser forensics
+python3 unfoldV3.py disk.dd --scan-disk browser --html -o browser.html
 
-**Scenario 4: Automated Credential Harvesting** Quickly pull Linux password hashes (`/etc/shadow`) or Windows Registry hives (SAM/SYSTEM) for offline cracking.
-
-```bash
-python3 unfold.py forensic_image.dd --creds -o dumped_secrets.txt
-
-```
-
-### 🧠 Memory Forensics (Volatility 3 Wrapper)
-
-**Scenario 5: Interactive Memory Exploration** Drop into a persistent shell where you can run multiple Volatility plugins against a RAM dump without re-loading the image every time.
-
-```bash
-python3 unfold.py physical_memory.raw -vol --extract DUMMY -o volatility_session.log
-# Inside the shell:
-# VOLATILITY> windows.pslist
-# VOLATILITY> windows.netscan
-
-```
-
-**Scenario 6: Automated Network Forensics (Volatility)** Use the Volatility engine to list all active network connections and save them directly to a text file.
-
-```bash
-# AI will suggest the netscan command
-python3 unfold.py ram_dump.mem -vol --extract DUMMY -ai openrouter -p "List all active network connections" -o connections.txt
-
-```
-
-### 🤖 AI-Powered "Smart" Investigation
-
-**Scenario 7: Investigating User Persistence (The "Hidden" Search)** You suspect a hacker added a startup script. Ask the AI to find it for you across the entire filesystem.
-
-```bash
-# The AI generates the necessary --extract command
-python3 unfold.py disk.img --extract DUMMY -ai deepseek -p "Search for any unusual scripts in startup folders or cron jobs" -o persistence_finds.json
-
-```
-
-**Scenario 8: Identifying Injected Code in RAM** Ask the AI to choose and execute the correct Volatility plugins to find "Process Hollowing" or memory injections.
-
-```bash
-# The AI generates the required windows.malfind or similar command
-python3 unfold.py ram.vmem -vol -ai openrouter -p "Check for memory regions marked as RWX that don't have a file backing" -o memory_alerts.txt
-
-```
-
-**Scenario 9: Evidence of Lateral Movement** Locate logs related to Remote Desktop (RDP) or SSH logins using natural language.
-
-```bash
-python3 unfold.py server.e01 --extract DUMMY -ai deepseek -p "Find and extract all RDP login event logs and SSH authorized_keys" -o access_logs.zip
-
-```
-
-### 🛡️ Resilience & Large-Scale Ops
-
-**Scenario 10: The "Resume" Logic for 10TB+ Drives** If a scan of a massive NAS drive is interrupted, use the session tracker to pick up exactly where it left off.
-
-```bash
-python3 unfold.py massive_nas.dd --json --resume -o massive_report.json
-
-```
-
-**Scenario 11: Investigating Ransomware (Deep Content Search)** Scan for specific file extensions created by ransomware (e.g., `.locky`, `.crypted`) and read the "Ransom Note" content automatically.
-
-```bash
-python3 unfold.py encrypted_drive.img --json -r "txt,html,crypted" --no-filter -o ransomware_discovery.json
-
-```
-
-**Scenario 12: Browser Artifact Recovery via AI** Instead of manually hunting through AppData, let the AI find the database and extract it for you.
-
-```bash
-python3 unfold.py workstation.dd --extract DUMMY -ai openrouter -p "Extract the Chrome Login Data and Cookies database for the user 'john_doe'" -o john_secrets.db
-
+# Document recovery
+python3 unfoldV3.py disk.dd --scan-disk documents --html -o docs.html
 ```
 
 ---
 
-## 📈 Analysis Workflow
+## 🛠️ Advanced Features
 
-1. **Map:** Use `--json` to get a bird's eye view of the disk.
-2. **Filter:** Focus on Vital Dirs (Users, etc, var) automatically.
-3. **Query:** Use `-p` (AI) to ask complex questions about the artifacts.
-4. **Extract:** Use `--extract` to pull the evidence for your final report.
-5. **Verify:** Always run with `--hash` for court-ready logs.
+### Interactive Reports with File Download
+
+Disk scan reports include **clickable download buttons** for files:
+
+```bash
+python3 unfoldV3.py disk.dd --scan-disk ctf --html -o report.html
+# Open report.html in browser
+# Click any "Download" button to extract files instantly!
+```
+
+### AI-Powered Analysis (Optional)
+
+```bash
+# Natural language commands
+python3 unfoldV3.py memory.dmp \
+  -p "find all suspicious processes and their network connections" \
+  -ai openrouter --html -o ai_analysis.html
+```
 
 ---
 
-## 🤝 Connect & Support
+## 📋 Requirements
 
-**Developer:** [Abdulrahman Alazazi](https://github.com/arazazi)
+- **Python** 3.8+
+- **pytsk3** - Disk analysis
+- **Volatility 3** - Memory analysis (included)
+- **pyewf** - E01 image support (optional)
+- **openai** - AI features (optional)
 
-**Professional Network:** [LinkedIn Profile](https://www.linkedin.com/in/arazazi)
+### Installation
+```bash
+pip install pytsk3 --break-system-packages
+pip install pyewf openai --break-system-packages  # Optional
+```
 
-**License:** MIT | Built for the DFIR Community | 🛡️ Stay Ethical
+---
+
+## 🎨 Project Structure
+
+```
+unfold/
+├── unfold.py                 # Main script
+├── DEPLOY.sh                   # One-click installer
+├── config.example.json         # Example config (no real keys)
+├── scans/                      # Scan profile definitions
+│   ├── unified_scan_profiles.json
+│   └── disk_scan_profiles.json
+├── report-template/            # HTML templates
+│   └── report.html
+├── Documentation.md            # Complete user guide
+└── README.md                   # This file
+```
+
+---
+
+## 🤝 Contributing
+
+Contributions welcome! Please:
+
+1. Fork the repository
+2. Create a feature branch
+3. Commit your changes
+4. Push to the branch
+5. Open a Pull Request
+
+---
+
+## 📄 License
+
+MIT License - see LICENSE file for details.
+
+---
+
+## 🙏 Acknowledgments
+
+- **Volatility Foundation** - Memory forensics framework
+- **The Sleuth Kit** - Filesystem analysis tools
+- **OpenAI & Anthropic** - AI integration
+
+---
+
+<p align="center">
+  <sub>Built with ❤️ for forensic investigators, CTF players, and security researchers</sub>
+</p>
