@@ -1,0 +1,710 @@
+<!DOCTYPE html>
+<html lang="en" class="dark">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UNFOLD | Forensic Analysis Report - {case_id}</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@300;400;500;700&family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <script>
+        tailwind.config = {
+            darkMode: 'class',
+            theme: {
+                extend: {
+                    colors: {
+                        cyber: {
+                            50: '#f0f9ff',
+                            100: '#e0f2fe',
+                            500: '#3b82f6',
+                            600: '#2563eb',
+                            700: '#1d4ed8',
+                            900: '#1e3a8a',
+                        }
+                    }
+                }
+            }
+        }
+    </script>
+    <style>
+        :root {
+            --bg-main: #0a0f1e;
+            --bg-card: #0f1729;
+            --bg-elevated: #131b2e;
+            --accent-blue: #3b82f6;
+            --accent-cyan: #06b6d4;
+            --accent-green: #10b981;
+            --accent-red: #ef4444;
+            --accent-yellow: #f59e0b;
+            --terminal-green: #10b981;
+            --border-subtle: rgba(255, 255, 255, 0.06);
+            --glow-blue: rgba(59, 130, 246, 0.15);
+        }
+        
+        * {
+            scrollbar-width: thin;
+            scrollbar-color: #475569 #0f172a;
+        }
+        
+        *::-webkit-scrollbar {
+            width: 10px;
+            height: 10px;
+        }
+        
+        *::-webkit-scrollbar-track {
+            background: #0f172a;
+            border-radius: 10px;
+        }
+        
+        *::-webkit-scrollbar-thumb {
+            background: linear-gradient(180deg, #475569, #334155);
+            border-radius: 10px;
+            border: 2px solid #0f172a;
+        }
+        
+        *::-webkit-scrollbar-thumb:hover {
+            background: linear-gradient(180deg, #64748b, #475569);
+        }
+        
+        html, body {
+            height: 100%;
+            margin: 0;
+            padding: 0;
+            overflow: hidden;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: linear-gradient(135deg, #0a0f1e 0%, #0f1729 50%, #0a0f1e 100%);
+            color: #f1f5f9;
+            display: flex;
+        }
+        
+        .mono {
+            font-family: 'JetBrains Mono', 'Courier New', monospace;
+            letter-spacing: -0.02em;
+        }
+        
+        .glass {
+            background: rgba(15, 23, 42, 0.7);
+            backdrop-filter: blur(20px) saturate(180%);
+            border: 1px solid var(--border-subtle);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+        
+        .glass-heavy {
+            background: rgba(19, 27, 46, 0.85);
+            backdrop-filter: blur(24px) saturate(200%);
+            border: 1px solid rgba(255, 255, 255, 0.08);
+            box-shadow: 0 20px 60px rgba(0, 0, 0, 0.5);
+        }
+        
+        .sidebar {
+            width: 320px;
+            height: 100vh;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+        
+        .main-content {
+            flex: 1;
+            height: 100vh;
+            overflow-y: auto;
+            overflow-x: hidden;
+        }
+        
+        .sidebar-link {
+            position: relative;
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+        }
+        
+        .sidebar-link::before {
+            content: '';
+            position: absolute;
+            left: 0;
+            top: 0;
+            height: 100%;
+            width: 3px;
+            background: linear-gradient(180deg, var(--accent-blue), var(--accent-cyan));
+            transform: scaleY(0);
+            transition: transform 0.3s ease;
+        }
+        
+        .sidebar-link:hover::before,
+        .sidebar-link.active::before {
+            transform: scaleY(1);
+        }
+        
+        .sidebar-link:hover {
+            background: rgba(59, 130, 246, 0.08);
+            color: var(--accent-blue);
+            padding-left: 1.25rem;
+        }
+        
+        .sidebar-link.active {
+            background: rgba(59, 130, 246, 0.12);
+            color: var(--accent-blue);
+            font-weight: 600;
+        }
+        
+        .terminal-output {
+            background: #000000;
+            border: 1px solid #1e293b;
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            color: var(--terminal-green);
+            font-size: 0.75rem;
+            line-height: 1.6;
+            max-height: 600px;
+            overflow-y: auto;
+            position: relative;
+            box-shadow: inset 0 2px 8px rgba(0, 0, 0, 0.6);
+        }
+        
+        .terminal-output::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            height: 32px;
+            background: linear-gradient(180deg, rgba(0, 255, 0, 0.02), transparent);
+            pointer-events: none;
+        }
+        
+        .plugin-card {
+            scroll-margin-top: 2rem;
+            transition: all 0.3s ease;
+        }
+        
+        .plugin-card:hover {
+            transform: translateY(-2px);
+        }
+        
+        .plugin-header {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(6, 182, 212, 0.1));
+            border-left: 4px solid var(--accent-blue);
+            padding: 1.25rem 1.5rem;
+            border-radius: 1rem 1rem 0 0;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .plugin-header:hover {
+            background: linear-gradient(135deg, rgba(59, 130, 246, 0.15), rgba(6, 182, 212, 0.15));
+            border-left-width: 6px;
+        }
+        
+        .plugin-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            padding: 0.375rem 0.875rem;
+            border-radius: 9999px;
+            font-size: 0.7rem;
+            font-weight: 600;
+            letter-spacing: 0.05em;
+            text-transform: uppercase;
+        }
+        
+        .badge-success {
+            background: rgba(16, 185, 129, 0.15);
+            color: #10b981;
+            border: 1px solid rgba(16, 185, 129, 0.3);
+        }
+        
+        .badge-warning {
+            background: rgba(245, 158, 11, 0.15);
+            color: #f59e0b;
+            border: 1px solid rgba(245, 158, 11, 0.3);
+        }
+        
+        .badge-error {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+        }
+        
+        .badge-info {
+            background: rgba(59, 130, 246, 0.15);
+            color: #3b82f6;
+            border: 1px solid rgba(59, 130, 246, 0.3);
+        }
+        
+        .expand-btn {
+            transition: transform 0.3s ease;
+        }
+        
+        .expand-btn.expanded {
+            transform: rotate(180deg);
+        }
+        
+        .collapsible-content {
+            max-height: 0;
+            overflow: hidden;
+            transition: max-height 0.4s ease-in-out;
+        }
+        
+        .collapsible-content.expanded {
+            max-height: 100000px; /* Large enough for any content */
+        }
+        
+        .floating-action-btn {
+            position: fixed;
+            bottom: 2rem;
+            right: 2rem;
+            width: 56px;
+            height: 56px;
+            background: linear-gradient(135deg, var(--accent-blue), var(--accent-cyan));
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 8px 24px rgba(59, 130, 246, 0.4);
+            cursor: pointer;
+            transition: all 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .floating-action-btn:hover {
+            transform: scale(1.1) rotate(5deg);
+            box-shadow: 0 12px 36px rgba(59, 130, 246, 0.6);
+        }
+        
+        .pulse-dot {
+            animation: pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite;
+        }
+        
+        @keyframes pulse {
+            0%, 100% {
+                opacity: 1;
+            }
+            50% {
+                opacity: 0.5;
+            }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.6s ease-out forwards;
+        }
+        
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+        
+        @media print {
+            body {
+                background: white;
+                color: black;
+            }
+            .glass, .glass-heavy {
+                background: white;
+                border: 1px solid #ddd;
+            }
+            .sidebar, .floating-action-btn {
+                display: none;
+            }
+            .main-content {
+                width: 100%;
+            }
+        }
+        
+        @media (max-width: 1024px) {
+            .sidebar {
+                transform: translateX(-100%);
+                transition: transform 0.3s ease;
+                position: fixed;
+                z-index: 100;
+                height: 100vh;
+            }
+            
+            .sidebar.mobile-open {
+                transform: translateX(0);
+            }
+            
+            .main-content {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Sidebar -->
+    <aside id="sidebar" class="sidebar glass-heavy border-r border-slate-800/50 flex flex-col">
+        <!-- Header -->
+        <div class="p-6 border-b border-slate-800/50">
+            <div class="flex items-center gap-3 mb-6">
+                <div class="h-10 w-10 bg-gradient-to-br from-blue-600 to-cyan-600 rounded-xl flex items-center justify-center font-bold text-white shadow-lg">
+                    <svg class="w-6 h-6" fill="currentColor" viewBox="0 0 20 20">
+                        <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                        <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
+                    </svg>
+                </div>
+                <div>
+                    <span class="text-xl font-bold tracking-tight">UNFOLD</span>
+                    <p class="text-xs text-slate-400 mono">Forensic Suite</p>
+                </div>
+            </div>
+            
+            <!-- Search Box -->
+            <div class="relative">
+                <input 
+                    type="text" 
+                    id="searchBox"
+                    placeholder="Search plugins..." 
+                    class="w-full px-4 py-2.5 pl-10 bg-slate-900/50 border border-slate-700/50 rounded-xl text-sm focus:outline-none focus:border-blue-500 focus:ring-2 focus:ring-blue-500/20 transition-all"
+                />
+                <svg class="w-5 h-5 absolute left-3 top-2.5 text-slate-500" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z"/>
+                </svg>
+            </div>
+        </div>
+        
+        <!-- Navigation -->
+        <nav class="flex-1 overflow-y-auto p-6 space-y-6">
+            <div>
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2">
+                    <span class="w-4 h-0.5 bg-slate-700"></span>
+                    Overview
+                </p>
+                <a href="#overview" class="sidebar-link flex items-center gap-3 p-3 rounded-xl text-sm">
+                    <span class="text-lg">🏠</span>
+                    <span>Case Summary</span>
+                </a>
+                <a href="#statistics" class="sidebar-link flex items-center gap-3 p-3 rounded-xl text-sm">
+                    <span class="text-lg">📊</span>
+                    <span>Statistics</span>
+                </a>
+            </div>
+            
+            <div>
+                <p class="text-[10px] font-bold text-slate-500 uppercase tracking-widest mb-3 flex items-center gap-2">
+                    <span class="w-4 h-0.5 bg-slate-700"></span>
+                    Plugin Results
+                    <span class="ml-auto px-2 py-0.5 bg-blue-500/20 text-blue-400 rounded-full text-[9px] font-bold" id="pluginCount">{total_plugins}</span>
+                </p>
+                <div class="space-y-1" id="pluginLinks">
+                    <!-- Plugin links will be injected here -->
+                </div>
+            </div>
+        </nav>
+        
+        <!-- Footer -->
+        <div class="p-6 border-t border-slate-800/50">
+            <div class="flex items-center justify-between text-xs text-slate-500">
+                <span class="mono">v3.0-ULTRA</span>
+                <span>© 2026 Azazi</span>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        
+        <!-- Hero Section -->
+        <section id="overview" class="relative p-10 lg:p-16 border-b border-slate-800/50 bg-gradient-to-br from-slate-900/30 via-blue-900/10 to-slate-900/30">
+            <div class="absolute inset-0 bg-[url('data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iNjAiIGhlaWdodD0iNjAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+PGRlZnM+PHBhdHRlcm4gaWQ9ImdyaWQiIHdpZHRoPSI2MCIgaGVpZ2h0PSI2MCIgcGF0dGVyblVuaXRzPSJ1c2VyU3BhY2VPblVzZSI+PHBhdGggZD0iTSAxMCAwIEwgMCAwIDAgMTAiIGZpbGw9Im5vbmUiIHN0cm9rZT0icmdiYSgyNTUsIDI1NSwgMjU1LCAwLjAzKSIgc3Ryb2tlLXdpZHRoPSIxIi8+PC9wYXR0ZXJuPjwvZGVmcz48cmVjdCB3aWR0aD0iMTAwJSIgaGVpZ2h0PSIxMDAlIiBmaWxsPSJ1cmwoI2dyaWQpIi8+PC9zdmc+')] opacity-40"></div>
+            
+            <div class="relative">
+                <div class="flex flex-col lg:flex-row justify-between items-start lg:items-center gap-6 mb-12">
+                    <div>
+                        <div class="flex items-center gap-3 mb-4">
+                            <div class="pulse-dot w-3 h-3 bg-green-500 rounded-full"></div>
+                            <span class="text-xs font-bold text-green-500 uppercase tracking-wider mono">Analysis Complete</span>
+                        </div>
+                        <h1 class="text-4xl lg:text-5xl font-extrabold tracking-tight mb-3 bg-clip-text text-transparent bg-gradient-to-r from-white via-blue-100 to-cyan-100">
+                            Forensic Intelligence Report
+                        </h1>
+                        <div class="space-y-1">
+                            <p class="text-slate-400 mono text-sm">
+                                <span class="text-slate-500">Case ID:</span> 
+                                <span class="text-blue-400 font-semibold">{case_id}</span>
+                            </p>
+                            <p class="text-slate-400 mono text-sm">
+                                <span class="text-slate-500">Evidence:</span> 
+                                <span class="text-cyan-400 font-semibold break-all">{image_path}</span>
+                            </p>
+                        </div>
+                    </div>
+                    
+                    <div class="flex flex-col items-start lg:items-end gap-3">
+                        <span class="plugin-badge badge-success">
+                            <svg class="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
+                                <path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/>
+                            </svg>
+                            Verified Report
+                        </span>
+                        <span class="text-slate-500 text-xs mono flex items-center gap-2">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z"/>
+                            </svg>
+                            {timestamp}
+                        </span>
+                        <button onclick="window.print()" class="text-xs text-blue-400 hover:text-blue-300 flex items-center gap-2 transition-colors">
+                            <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 17h2a2 2 0 002-2v-4a2 2 0 00-2-2H5a2 2 0 00-2 2v4a2 2 0 002 2h2m2 4h6a2 2 0 002-2v-4a2 2 0 00-2-2H9a2 2 0 00-2 2v4a2 2 0 002 2zm8-12V5a2 2 0 00-2-2H9a2 2 0 00-2 2v4h10z"/>
+                            </svg>
+                            Print Report
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Statistics Grid -->
+                <div id="statistics" class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-6">
+                    <div class="stat-card glass p-6 rounded-2xl fade-in hover:transform hover:scale-105 transition-all duration-300 relative overflow-hidden">
+                        <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-blue-500 to-cyan-500"></div>
+                        <div class="flex items-center justify-between mb-4">
+                            <p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Scan Type</p>
+                            <div class="w-10 h-10 bg-blue-500/10 rounded-xl flex items-center justify-center">
+                                <svg class="w-5 h-5 text-blue-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                                    <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm9.707 5.707a1 1 0 00-1.414-1.414L9 12.586l-1.293-1.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <p class="text-3xl font-bold text-blue-400 uppercase tracking-wide mono">{scan_type}</p>
+                    </div>
+                    
+                    <div class="stat-card glass p-6 rounded-2xl fade-in hover:transform hover:scale-105 transition-all duration-300 relative overflow-hidden" style="animation-delay: 0.1s">
+                        <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-cyan-500 to-teal-500"></div>
+                        <div class="flex items-center justify-between mb-4">
+                            <p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Total Plugins</p>
+                            <div class="w-10 h-10 bg-cyan-500/10 rounded-xl flex items-center justify-center">
+                                <svg class="w-5 h-5 text-cyan-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path d="M2 11a1 1 0 011-1h2a1 1 0 011 1v5a1 1 0 01-1 1H3a1 1 0 01-1-1v-5zM8 7a1 1 0 011-1h2a1 1 0 011 1v9a1 1 0 01-1 1H9a1 1 0 01-1-1V7zM14 4a1 1 0 011-1h2a1 1 0 011 1v12a1 1 0 01-1 1h-2a1 1 0 01-1-1V4z"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <p class="text-3xl font-bold text-white">{total_plugins}</p>
+                        <p class="text-xs text-slate-500 mt-2 mono">Artifacts Analyzed</p>
+                    </div>
+                    
+                    <div class="stat-card glass p-6 rounded-2xl fade-in hover:transform hover:scale-105 transition-all duration-300 relative overflow-hidden" style="animation-delay: 0.2s">
+                        <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-green-500 to-emerald-500"></div>
+                        <div class="flex items-center justify-between mb-4">
+                            <p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Status</p>
+                            <div class="w-10 h-10 bg-green-500/10 rounded-xl flex items-center justify-center">
+                                <svg class="w-5 h-5 text-green-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M10 18a8 8 0 100-16 8 8 0 000 16zm3.707-9.293a1 1 0 00-1.414-1.414L9 10.586 7.707 9.293a1 1 0 00-1.414 1.414l2 2a1 1 0 001.414 0l4-4z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <p class="text-3xl font-bold text-green-400">Complete</p>
+                        <p class="text-xs text-slate-500 mt-2 mono">All Plugins Executed</p>
+                    </div>
+                    
+                    <div class="stat-card glass p-6 rounded-2xl fade-in hover:transform hover:scale-105 transition-all duration-300 relative overflow-hidden" style="animation-delay: 0.3s">
+                        <div class="absolute top-0 left-0 right-0 h-1 bg-gradient-to-r from-purple-500 to-pink-500"></div>
+                        <div class="flex items-center justify-between mb-4">
+                            <p class="text-slate-500 text-xs font-bold uppercase tracking-wider">Platform</p>
+                            <div class="w-10 h-10 bg-purple-500/10 rounded-xl flex items-center justify-center">
+                                <svg class="w-5 h-5 text-purple-400" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd" d="M2 5a2 2 0 012-2h12a2 2 0 012 2v10a2 2 0 01-2 2H4a2 2 0 01-2-2V5zm3.293 1.293a1 1 0 011.414 0l3 3a1 1 0 010 1.414l-3 3a1 1 0 01-1.414-1.414L7.586 10 5.293 7.707a1 1 0 010-1.414zM11 12a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
+                                </svg>
+                            </div>
+                        </div>
+                        <p class="text-3xl font-bold text-purple-400 uppercase mono">{platform}</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Plugin Results Section -->
+        <div class="p-10 lg:p-16 space-y-8" id="pluginResults">
+            <!-- Plugin cards will be injected here -->
+        </div>
+
+        <!-- Footer -->
+        <footer class="p-10 text-center border-t border-slate-800/50 bg-slate-900/30">
+            <div class="max-w-4xl mx-auto">
+                <div class="flex items-center justify-center gap-3 mb-4">
+                    <div class="h-8 w-8 bg-gradient-to-br from-blue-600 to-cyan-600 rounded-lg flex items-center justify-center">
+                        <svg class="w-5 h-5 text-white" fill="currentColor" viewBox="0 0 20 20">
+                            <path d="M9 2a1 1 0 000 2h2a1 1 0 100-2H9z"/>
+                            <path fill-rule="evenodd" d="M4 5a2 2 0 012-2 3 3 0 003 3h2a3 3 0 003-3 2 2 0 012 2v11a2 2 0 01-2 2H6a2 2 0 01-2-2V5zm3 4a1 1 0 000 2h.01a1 1 0 100-2H7zm3 0a1 1 0 000 2h3a1 1 0 100-2h-3zm-3 4a1 1 0 100 2h.01a1 1 0 100-2H7zm3 0a1 1 0 100 2h3a1 1 0 100-2h-3z" clip-rule="evenodd"/>
+                        </svg>
+                    </div>
+                    <span class="text-lg font-bold">UNFOLD Forensics</span>
+                </div>
+                <p class="text-slate-500 text-sm mono mb-6">
+                    End of Report - Unified Forensic Suite v3.0-ULTRA
+                </p>
+                <div class="flex items-center justify-center gap-6 text-xs text-slate-600">
+                    <span>Generated with UNFOLD</span>
+                    <span>•</span>
+                    <span>{timestamp}</span>
+                    <span>•</span>
+                    <span>Confidential</span>
+                </div>
+            </div>
+        </footer>
+    </main>
+
+    <!-- Scroll to Top Button -->
+    <div class="floating-action-btn" id="scrollTopBtn" style="display: none;">
+        <svg class="w-6 h-6 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M5 10l7-7m0 0l7 7m-7-7v18"/>
+        </svg>
+    </div>
+
+    <script>
+        // Initialize the report
+        document.addEventListener('DOMContentLoaded', function() {
+            setupEventListeners();
+            setupScrollDetection();
+            
+            // Activate first sidebar link
+            const firstLink = document.querySelector('.sidebar-link');
+            if (firstLink) firstLink.classList.add('active');
+        });
+
+        function setupEventListeners() {
+            // Smooth scrolling for sidebar links
+            document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+                anchor.addEventListener('click', function (e) {
+                    e.preventDefault();
+                    const target = document.querySelector(this.getAttribute('href'));
+                    if (target) {
+                        const mainContent = document.querySelector('.main-content');
+                        const targetPosition = target.offsetTop;
+                        
+                        mainContent.scrollTo({
+                            top: targetPosition - 20,
+                            behavior: 'smooth'
+                        });
+                        
+                        // Update active state
+                        document.querySelectorAll('.sidebar-link').forEach(link => {
+                            link.classList.remove('active');
+                        });
+                        this.classList.add('active');
+                    }
+                });
+            });
+
+            // Search functionality
+            const searchBox = document.getElementById('searchBox');
+            if (searchBox) {
+                searchBox.addEventListener('input', function(e) {
+                    const searchTerm = e.target.value.toLowerCase();
+                    const pluginLinks = document.querySelectorAll('#pluginLinks .sidebar-link');
+                    
+                    pluginLinks.forEach(link => {
+                        const text = link.textContent.toLowerCase();
+                        if (text.includes(searchTerm)) {
+                            link.style.display = 'flex';
+                        } else {
+                            link.style.display = 'none';
+                        }
+                    });
+                });
+            }
+
+            // Scroll to top button
+            const scrollTopBtn = document.getElementById('scrollTopBtn');
+            if (scrollTopBtn) {
+                scrollTopBtn.addEventListener('click', function() {
+                    document.querySelector('.main-content').scrollTo({
+                        top: 0,
+                        behavior: 'smooth'
+                    });
+                });
+            }
+        }
+
+        function setupScrollDetection() {
+            const main = document.querySelector('.main-content');
+            const scrollTopBtn = document.getElementById('scrollTopBtn');
+            
+            if (main && scrollTopBtn) {
+                main.addEventListener('scroll', function() {
+                    if (main.scrollTop > 500) {
+                        scrollTopBtn.style.display = 'flex';
+                    } else {
+                        scrollTopBtn.style.display = 'none';
+                    }
+                    
+                    // Update active sidebar link based on scroll position
+                    updateActiveSidebarLink();
+                });
+            }
+        }
+
+        function updateActiveSidebarLink() {
+            const sections = document.querySelectorAll('[id]');
+            const scrollPosition = document.querySelector('.main-content').scrollTop + 100;
+            
+            sections.forEach(section => {
+                const sectionTop = section.offsetTop;
+                const sectionHeight = section.offsetHeight;
+                const sectionId = section.getAttribute('id');
+                
+                if (scrollPosition >= sectionTop && scrollPosition < sectionTop + sectionHeight) {
+                    document.querySelectorAll('.sidebar-link').forEach(link => {
+                        link.classList.remove('active');
+                        if (link.getAttribute('href') === `#${sectionId}`) {
+                            link.classList.add('active');
+                        }
+                    });
+                }
+            });
+        }
+
+        // Toggle plugin content
+        function togglePlugin(pluginId) {
+            const content = document.getElementById(`content_${pluginId}`);
+            const button = document.getElementById(`btn_${pluginId}`);
+            
+            if (content && button) {
+                content.classList.toggle('expanded');
+                button.classList.toggle('expanded');
+            }
+        }
+
+        // Copy plugin output to clipboard
+        function copyOutput(pluginId) {
+            const output = document.getElementById(`output_${pluginId}`);
+            if (output) {
+                navigator.clipboard.writeText(output.textContent).then(() => {
+                    // Show feedback
+                    const btn = event.target.closest('button');
+                    const originalHTML = btn.innerHTML;
+                    btn.innerHTML = '<svg class="w-4 h-4" fill="currentColor" viewBox="0 0 20 20"><path fill-rule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clip-rule="evenodd"/></svg>';
+                    setTimeout(() => {
+                        btn.innerHTML = originalHTML;
+                    }, 2000);
+                }).catch(err => {
+                    console.error('Failed to copy:', err);
+                });
+            }
+        }
+
+        // Download plugin output
+        function downloadOutput(pluginId, pluginName) {
+            const output = document.getElementById(`output_${pluginId}`);
+            if (output) {
+                const blob = new Blob([output.textContent], { type: 'text/plain' });
+                const url = URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `${pluginName}_output.txt`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                URL.revokeObjectURL(url);
+            }
+        }
+    </script>
+</body>
+</html>
