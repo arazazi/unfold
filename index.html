@@ -3,361 +3,420 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Unfold | Unified Forensic Intelligence</title>
+    <title>UNFOLD ULTRA | Professional Forensic Investigation Suite</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;700&family=Inter:wght@400;600;700;900&display=swap" rel="stylesheet">
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300;400;500&family=Plus+Jakarta+Sans:wght@300;400;600;800&display=swap');
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body { font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .mono { font-family: 'JetBrains Mono', monospace; }
         
-        :root {
-            --bg-main: #020617;
-            --accent-blue: #3b82f6;
-            --accent-purple: #a855f7;
-            --accent-shadow-blue: rgba(59, 130, 246, 0.4);
-        }
-
-        body { 
-            font-family: 'Plus Jakarta Sans', sans-serif; 
-            background-color: var(--bg-main); 
-            color: #e2e8f0; 
-            scroll-behavior: smooth; 
-        }
-
-        .code-font { font-family: 'Fira Code', monospace; }
-        
-        .glass-card {
-            background: rgba(30, 41, 59, 0.4);
-            backdrop-filter: blur(12px);
-            border: 1px solid rgba(255, 255, 255, 0.05);
-            transition: all 0.3s ease;
-        }
-
-        .glass-card:hover {
-            border-color: var(--accent-blue);
-            box-shadow: 0 0 15px var(--accent-shadow-blue); /* Added glow effect */
-            transform: translateY(-2px);
-        }
-
-        .sidebar-link {
-            transition: all 0.2s ease;
-            border-left: 2px solid transparent;
-        }
-
-        .sidebar-link:hover {
-            background: linear-gradient(90deg, rgba(59, 130, 246, 0.1) 0%, transparent 100%);
-            border-left: 2px solid var(--accent-blue);
-            color: white;
-        }
-
-        pre {
-            background: #010409 !important;
-            border: 1px solid #1e293b;
-            border-radius: 12px;
-            padding: 1.25rem;
-            position: relative;
-            overflow-x: auto;
+        .gradient-bg {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
         }
         
-        /* New styles for tabbed code blocks */
-        .code-tabs {
-            background: #010409;
-            border: 1px solid #1e293b;
-            border-radius: 12px;
-        }
-        .code-tab-header {
-            border-bottom: 1px solid #1e293b;
-            background: #0d1117;
-        }
-        .code-tab-button {
-            padding: 0.75rem 1.25rem;
-            border-bottom: 2px solid transparent;
-            color: #94a3b8;
-            font-size: 0.8rem;
-            cursor: pointer;
-        }
-        .code-tab-button.active {
-            border-bottom: 2px solid var(--accent-blue);
-            color: white;
-            font-weight: 600;
+        .glass {
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
         }
         
-        /* Cyber-Glow Text */
-        .cyber-glow-blue {
-            text-shadow: 0 0 8px rgba(59, 130, 246, 0.7);
-        }
-
-        .banner-pre {
-            background: transparent !important;
-            border: none !important;
-            line-height: 1.1;
-            font-size: 0.6rem;
-            color: var(--accent-blue);
-            text-shadow: 0 0 15px var(--accent-shadow-blue);
-            pointer-events: none;
-        }
-
-        @media (min-width: 768px) { .banner-pre { font-size: 0.8rem; } }
-
-        ::-webkit-scrollbar { width: 8px; }
-        ::-webkit-scrollbar-track { background: #020617; }
-        ::-webkit-scrollbar-thumb { background: #1e293b; border-radius: 10px; }
-
         .hero-gradient {
-            background: radial-gradient(circle at 50% 50%, rgba(59, 130, 246, 0.15) 0%, transparent 50%);
+            background: linear-gradient(135deg, #0a0e27 0%, #1a1f3a 50%, #2a2f4a 100%);
+        }
+        
+        .glow {
+            box-shadow: 0 0 20px rgba(102, 126, 234, 0.5);
+        }
+        
+        .feature-card {
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .feature-card:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 20px 40px rgba(102, 126, 234, 0.3);
+        }
+        
+        @keyframes float {
+            0%, 100% { transform: translateY(0px); }
+            50% { transform: translateY(-20px); }
+        }
+        
+        .float {
+            animation: float 6s ease-in-out infinite;
+        }
+        
+        code {
+            background: rgba(0, 0, 0, 0.3);
+            padding: 2px 8px;
+            border-radius: 4px;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 0.9em;
         }
     </style>
 </head>
-<body class="selection:bg-blue-500/30">
+<body class="bg-gray-900 text-white">
 
-    <!-- Sidebar -->
-    <aside id="sidebar" class="fixed inset-y-0 left-0 w-72 bg-slate-950/80 backdrop-blur-xl border-r border-slate-900 transform -translate-x-full lg:translate-x-0 transition-transform duration-300 z-50">
-        <div class="p-8 flex flex-col h-full">
-            <div class="mb-10">
-                <div class="text-blue-500 font-black text-2xl tracking-tighter italic cyber-glow-blue">UNFOLD <span class="text-slate-500"></span></div>
-                <div class="text-[10px] text-slate-500 uppercase tracking-[0.2em] font-bold">Forensic Intelligence</div>
+    <!-- Navigation -->
+    <nav class="fixed w-full z-50 glass">
+        <div class="max-w-7xl mx-auto px-6 py-4 flex justify-between items-center">
+            <div class="flex items-center gap-3">
+                <div class="h-10 w-10 gradient-bg rounded-lg flex items-center justify-center font-bold text-white italic text-xl glow">
+                    U
+                </div>
+                <span class="text-2xl font-bold">UNFOLD <span class="text-blue-400"></span></span>
             </div>
-
-            <nav class="flex-1 space-y-6 overflow-y-auto">
-                <div>
-                    <h5 class="px-4 text-[10px] font-black text-slate-600 uppercase tracking-widest mb-2">Core</h5>
-                    <a href="#logic" class="sidebar-link block px-4 py-2 text-slate-400">Forensic Core</a>
-                    <a href="#vol-integration" class="sidebar-link block px-4 py-2 text-slate-400">Volatility Integration</a>
-                </div>
-
-                <div>
-                    <h5 class="px-4 text-[10px] font-black text-slate-600 uppercase tracking-widest mb-2">Setup</h5>
-                    <a href="#installation" class="sidebar-link block px-4 py-2 text-slate-400">Installation</a>
-                    <a href="#config" class="sidebar-link block px-4 py-2 text-slate-400">AI Key Configuration</a>
-                </div>
-
-                <div>
-                    <h5 class="px-4 text-[10px] font-black text-slate-600 uppercase tracking-widest mb-2">Usage</h5>
-                    <a href="#disk-usage" class="sidebar-link block px-4 py-2 text-slate-400">Disk Mapping & Hashing</a>
-                    <a href="#ai-commanding" class="sidebar-link block px-4 py-2 text-slate-400">AI Command Generation</a>
-                    <a href="#execution-flow" class="sidebar-link block px-4 py-2 text-slate-400">Execution Flow</a>
-                </div>
-            </nav>
-
-            <!-- Developer Header Block -->
-            <div class="mt-auto pt-6 border-t border-slate-900">
-                <div class="flex flex-col items-start space-y-1 mb-3">
-                    <div class="text-xs text-slate-500 uppercase tracking-widest">Architect</div>
-                    <div class="text-xl font-extrabold text-blue-400 cyber-glow-blue">AR. Khairi Alazazi</div>
-                </div>
-                
-                <a href="https://www.linkedin.com/in/abdulrahman-alazazi/" target="_blank" title="Connect on LinkedIn" class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900/50 hover:bg-blue-600/10 transition group mb-2">
-                    <i class="fab fa-linkedin text-xl text-slate-400 group-hover:text-white"></i>
-                    <div class="text-sm font-bold text-slate-200 uppercase tracking-tighter">LinkedIn Profile</div>
-                </a>
-
-                <!-- ADDED GITHUB LINK HERE -->
-                <a href="https://github.com/arazazi" target="_blank" title="Project GitHub" class="flex items-center space-x-3 p-3 rounded-xl bg-slate-900/50 hover:bg-blue-600/10 transition group">
-                    <i class="fab fa-github text-xl text-slate-400 group-hover:text-white"></i>
-                    <div class="text-sm font-bold text-slate-200 uppercase tracking-tighter">Project GitHub</div>
+            <div class="flex items-center gap-8">
+                <a href="#features" class="hover:text-blue-400 transition-colors">Features</a>
+                <a href="#profiles" class="hover:text-blue-400 transition-colors">Profiles</a>
+                <a href="#install" class="hover:text-blue-400 transition-colors">Install</a>
+                <a href="https://github.com/arazazi/unfold" target="_blank" 
+                   class="px-6 py-2 gradient-bg rounded-lg font-semibold hover:glow transition-all">
+                    GitHub
                 </a>
             </div>
         </div>
-    </aside>
+    </nav>
 
-    <!-- Main Content -->
-    <main class="lg:ml-72 min-h-screen">
+    <!-- Hero Section -->
+    <section class="hero-gradient min-h-screen flex items-center relative overflow-hidden pt-20">
+        <!-- Animated Background -->
+        <div class="absolute inset-0 opacity-20">
+            <div class="absolute top-20 left-20 w-64 h-64 bg-blue-500 rounded-full blur-3xl float"></div>
+            <div class="absolute bottom-20 right-20 w-96 h-96 bg-purple-500 rounded-full blur-3xl float" style="animation-delay: 2s;"></div>
+        </div>
         
-        <!-- Hero Section -->
-        <section class="relative min-h-[70vh] flex flex-col items-center justify-center border-b border-slate-900 hero-gradient overflow-hidden py-20">
-            <pre class="banner-pre mb-8 code-font">
- █    ██  ███▄    █   █████▒▒█████   ██▓    ▓█████▄ 
- ██  ▓██▒ ██ ▀█   █ ▓██   ▒▒██▒  ██▒▓██▒    ▒██▀ ██▌
-▓██  ▒██░▓██  ▀█ ██▒▒████ ░▒██░  ██▒▒██░    ░██   █▌
-▓▓█  ░██░▓██▒  ▐▌██▒░▓█▒  ░▒██   ██░▒██░    ░▓█▄   ▌
-▒▒█████▓ ▒██░   ▓██░░▒█░   ░ ████▓▒░░██████▒░▒████▓ 
-░▒▓▒ ▒ ▒ ░ ▒░   ▒ ▒  ▒ ░   ░ ▒░▒░▒░ ░ ▒░▓  ░ ▒▒▓  ▒ 
-░░▒░ ░ ░ ░ ░░   ░ ▒░ ░       ░ ▒ ▒░ ░ ░ ▒  ░ ░ ▒  ▒ 
- ░░░ ░ ░    ░   ░ ░  ░ ░   ░ ░ ░ ▒    ░ ░    ░ ░  ░ 
-   ░              ░            ░ ░      ░  ░   ░    
-                                             ░       
-                                        </pre>
-            
-            <div class="relative z-10 text-center px-6">
-                <h1 class="text-4xl md:text-6xl font-extrabold text-white mb-6 cyber-glow-blue">Unified Forensic Intelligence</h1>
-                <p class="text-xl text-slate-400 max-w-2xl mx-auto leading-relaxed">
-                    A high-performance forensic wrapper for <span class="text-blue-400 font-bold">Disk Mapping</span> and <span class="text-purple-400 font-bold">Memory Reconstruction</span>, fully guided by AI.
-                </p>
-                <div class="mt-10 flex flex-wrap justify-center gap-4">
-                    <a href="#installation" class="px-8 py-4 bg-blue-600 hover:bg-blue-500 text-white font-bold rounded-2xl transition shadow-lg shadow-blue-600/20">Setup Guide</a>
-                    <a href="https://www.linkedin.com/in/abdulrahman-alazazi/" target="_blank" class="px-8 py-4 bg-slate-800 hover:bg-slate-700 text-white font-bold rounded-2xl transition">Connect on LinkedIn</a>
-                </div>
-            </div>
-        </section>
-
-        <div class="max-w-5xl mx-auto px-8 py-24 space-y-32">
-
-            <!-- Technical Logic -->
-            <section id="logic" class="scroll-mt-24">
-                <h2 class="text-3xl font-bold text-white mb-12 flex items-center">
-                    <span class="text-blue-500 mr-4">01.</span> Forensic Core
-                </h2>
-                <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
-                    <div class="glass-card p-8 rounded-3xl">
-                        <h4 class="text-lg font-bold text-blue-400 mb-3">Resilient Disk Mapping (pytsk3)</h4>
-                        <p class="text-sm text-slate-400 leading-relaxed">Uses self-diagnosis to overcome corrupted headers and non-standard file systems (like forced FAT32 mounts), providing clean MACB timestamps and file metadata even when other tools fail.</p>
+        <div class="max-w-7xl mx-auto px-6 py-20 relative z-10">
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
+                <div>
+                    <div class="inline-block px-4 py-2 glass rounded-full mb-6">
+                        <span class="text-blue-400 font-semibold">ULTRA</span>
                     </div>
-                    <div class="glass-card p-8 rounded-3xl">
-                        <h4 class="text-lg font-bold text-purple-400 mb-3">AI Context Injection</h4>
-                        <p class="text-sm text-slate-400 leading-relaxed">The tool dynamically extracts the locally available Volatility 3 plugins and injects this valid list into the AI prompt, preventing the model from hallucinating deprecated or incorrect command names.</p>
+                    <h1 class="text-6xl lg:text-7xl font-black mb-6 leading-tight">
+                        The Ultimate<br>
+                        <span class="gradient-bg bg-clip-text text-transparent">Forensic Suite</span>
+                    </h1>
+                    <p class="text-xl text-gray-300 mb-8 leading-relaxed">
+                        Professional disk & memory forensics tool with AI-powered analysis, 
+                        interactive HTML reports, and CTF-optimized workflows.
+                    </p>
+                    <div class="flex gap-4">
+                        <a href="#install" class="px-8 py-4 gradient-bg rounded-xl font-bold text-lg hover:glow transition-all">
+                            Get Started
+                        </a>
+                        <a href="https://github.com/arazazi/unfold" target="_blank" 
+                           class="px-8 py-4 glass rounded-xl font-bold text-lg hover:bg-white/10 transition-all">
+                            View on GitHub
+                        </a>
                     </div>
-                </div>
-            </section>
-
-            <!-- Configuration -->
-            <section id="config" class="scroll-mt-24">
-                <h2 class="text-3xl font-bold text-white mb-12 flex items-center">
-                    <span class="text-blue-500 mr-4">02.</span> AI Key Configuration
-                </h2>
-                <p class="text-slate-300 mb-6">For advanced AI-guided execution, you must create a <code class="text-yellow-400">config.json</code> file in the root directory and populate it with your OpenRouter or DeepSeek keys.</p>
-                <pre class="code-font text-xs text-slate-300 leading-relaxed">
-<span class="text-blue-400">{</span>
-  <span class="text-green-400">"API_KEYS"</span>: <span class="text-blue-400">{</span>
-    <span class="text-green-400">"OPENROUTER"</span>: <span class="text-yellow-400">"sk-or-v1-..."</span>,
-    <span class="text-green-400">"DEEPSEEK"</span>: <span class="text-yellow-400">"sk-deepseek-..."</span>
-  <span class="text-blue-400">}</span>,
-  <span class="text-green-400">"TOOL_SETTINGS"</span>: <span class="text-blue-400">{</span>
-    <span class="text-green-400">"MAX_AI_FILE_SIZE_READ"</span>: <span class="text-yellow-400">102400</span> <span class="text-slate-500">// Optional limit on file content reading</span>
-  <span class="text-blue-400">}</span>
-<span class="text-blue-400">}</span></pre>
-            </section>
-
-            <!-- Volatility Pathing -->
-            <section id="vol-integration" class="scroll-mt-24">
-                <h2 class="text-3xl font-bold text-white mb-12 flex items-center">
-                    <span class="text-blue-500 mr-4">03.</span> Volatility Integration
-                </h2>
-                <div class="bg-purple-900/10 border border-purple-500/20 rounded-3xl p-8">
-                    <h4 class="text-xl font-bold text-white mb-4 italic">Pathing and Dependency</h4>
-                    <p class="text-slate-300 mb-6">Unfold requires Volatility 3 to function in <code>-vol</code> mode. It looks for a folder named <code class="text-purple-400">volatility3</code> containing <code class="text-purple-400">vol.py</code> in the <b>same directory</b> as the script for robust local execution.</p>
                     
-                    <div class="grid grid-cols-1 md:grid-cols-2 gap-8 items-center">
+                    <div class="flex gap-8 mt-12">
                         <div>
-                            <span class="text-xs font-bold text-slate-500 uppercase tracking-widest mb-4 block">Required Directory Structure:</span>
-                            <pre class="code-font text-xs text-slate-300 leading-relaxed">
-/Forensic-Tool-Folder/
-├── unfold.py
-└── <span class="text-green-400 font-bold">volatility3/</span>
-    ├── vol.py
-    └── ...</pre>
+                            <div class="text-4xl font-bold gradient-bg bg-clip-text text-transparent">40+</div>
+                            <div class="text-gray-400 text-sm">Scan Profiles</div>
                         </div>
-                        <div class="space-y-4">
-                            <p class="text-sm text-slate-400">Setup command:</p>
-                            <pre class="text-purple-300 text-xs">git clone https://github.com/volatilityfoundation/volatility3.git</pre>
-                            <div class="text-xs text-yellow-500 bg-yellow-500/10 p-3 rounded-lg border border-yellow-500/20">
-                                <i class="fas fa-info-circle mr-1"></i> The tool will automatically detect and correct the Python path for <code>vol.py</code>.
-                            </div>
+                        <div>
+                            <div class="text-4xl font-bold gradient-bg bg-clip-text text-transparent">2</div>
+                            <div class="text-gray-400 text-sm">Analysis Modes</div>
+                        </div>
+                        <div>
+                            <div class="text-4xl font-bold gradient-bg bg-clip-text text-transparent">100%</div>
+                            <div class="text-gray-400 text-sm">Open Source</div>
                         </div>
                     </div>
                 </div>
-            </section>
-
-
-            <!-- Usage -->
-            <section id="disk-usage" class="scroll-mt-24">
-                <h2 class="text-3xl font-bold text-white mb-12 flex items-center">
-                    <span class="text-blue-500 mr-4">04.</span> Usage & Command Center
-                </h2>
-                <div class="grid grid-cols-1 gap-12">
-                    
-                    <div class="p-8 code-tabs">
-                        <h4 class="text-blue-400 font-bold mb-4 uppercase text-xs">Disk Mapping (Standard Report)</h4>
-                        <p class="text-sm text-slate-400 mb-4">Generates the full file structure. Use <code>--hash</code> for proof of integrity.</p>
-                        <pre class="text-yellow-500">python3 unfold.py drive.dd --json --hash -o report.json</pre>
-                    </div>
-
-                    <div class="p-8 code-tabs" id="ai-commanding">
-                        <h4 class="text-purple-400 font-bold mb-4 uppercase text-xs">AI Command Generation (Automated Extraction)</h4>
-                        <div class="code-tab-header flex">
-                            <button class="code-tab-button active" onclick="showCodeTab(this, 'ai_input')">User Input</button>
-                            <button class="code-tab-button" onclick="showCodeTab(this, 'ai_output')">AI Generated & Executed</button>
-                        </div>
-                        <div class="code-tab-content active" id="ai_input">
-                            <pre class="code-font text-purple-300">python3 unfold.py image.dd <span class="text-red-400">--extract DUMMY</span> -ai openrouter -p "Extract the file located at /root/flag.gz" -o flag.gz</pre>
-                        </div>
-                        <div class="code-tab-content hidden" id="ai_output">
-                            <pre class="code-font text-green-400">
-[!] AUTO EXECUTING DISK COMMAND: python3 unfold.py image.dd --extract /root/flag.gz -o flag.gz
---- AUTO-EXECUTION OUTPUT ---
-[+] JSON Map saved to flag.gz
------------------------------</pre>
-                        </div>
-                    </div>
-
-                    <div class="p-8 code-tabs" id="execution-flow">
-                        <h4 class="text-red-400 font-bold mb-4 uppercase text-xs">Critical Execution Flow</h4>
-                        <p class="text-sm text-slate-400 mb-4">The AI automatically cleans the input, generates the command, and executes it in a seamless nested call.</p>
-                        <pre class="code-font text-xs text-slate-300 leading-relaxed">
-<span class="text-yellow-400"># 1. Initial Call (AI finds path)</span>
-python3 unfold.py image.dd <span class="text-red-400">--extract DUMMY</span> -ai openrouter -p "extract desktop"
-
-<span class="text-yellow-400"># 2. Internal Execution (The script runs this command itself)</span>
-subprocess.run(
-    "python3 unfold.py image.dd <span class="text-blue-400">--extract /home/user/Desktop -o desktop.zip</span>" 
-)
-<span class="text-slate-500">// Note: The 'DUMMY' argument is dropped and replaced by the AI's determined path.</span></pre>
-                    </div>
-
-                    <div class="p-8 glass-card rounded-3xl" id="extraction-notes">
-                        <h4 class="text-red-400 font-bold mb-4 uppercase text-xs">Credential Harvester</h4>
-                        <p class="text-sm text-slate-400 mb-4">Use the <code>--creds</code> flag for specific hash extraction:</p>
-                        <pre class="text-red-400">python3 unfold.py win_image.img --creds -o hashes.json</pre>
-                        <p class="text-xs text-slate-500 mt-2">Outputs Linux hashes directly, or extracts Windows SAM/SYSTEM hives into a local folder for offline cracking.</p>
-                    </div>
-
-                </div>
-            </section>
-
-        </div>
-
-        <!-- Footer -->
-        <footer class="border-t border-slate-900 bg-slate-950 px-8 py-20 text-center">
-            <div class="flex flex-col items-center">
-                <div class="text-blue-500 font-black text-3xl italic mb-4">UNFOLD</div>
-                <p class="text-slate-500 text-sm mb-8 max-w-sm">Professional Open Source Forensics. Built for the community.</p>
                 
-                <div class="flex space-x-6 mb-12">
-                    <a href="https://github.com/arazazi" target="_blank" class="text-slate-400 hover:text-white transition text-2xl"><i class="fab fa-github"></i></a>
-                    <a href="https://www.linkedin.com/in/abdulrahman-alazazi/" target="_blank" title="Connect with Developer" class="text-slate-400 hover:text-blue-400 transition text-2xl"><i class="fab fa-linkedin"></i></a>
-                </div>
+                <div class="relative">
+                    <div class="glass rounded-2xl p-6 shadow-2xl">
+                        <div class="flex items-center gap-2 mb-4">
+                            <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                            <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                            <span class="ml-4 text-gray-400 text-sm mono">unfold v3.0 ULTRA</span>
+                        </div>
+                        <pre class="text-sm mono text-green-400 leading-relaxed overflow-hidden">
+<span class="text-blue-400">$</span> python3 unfoldV3.py disk.dd --scan-disk ctf --html
 
-                <div class="flex flex-wrap justify-center gap-x-8 gap-y-2 text-[10px] font-bold text-slate-700 uppercase tracking-[0.3em]">
-                    <span>MIT License</span>
-                    <span>&copy; 2026 Abdulrahman Alazazi</span>
+<span class="text-gray-500">[*]</span> 🔍 Starting SMART disk scan: <span class="text-yellow-400">ctf</span>
+<span class="text-gray-500">[*]</span> Smart filesystem detection...
+<span class="text-green-500">[+]</span> Mounted as <span class="text-purple-400">EXT4</span>!
+<span class="text-green-500">[+]</span> Found <span class="text-yellow-400">847</span> files/directories
+<span class="text-gray-500">[*]</span> Searching for flags...
+<span class="text-green-500">[+]</span> Found <span class="text-yellow-400">12</span> interesting files!
+<span class="text-green-500">[+]</span> Interactive HTML report saved!
+<span class="text-gray-500">[*]</span> 📥 Download files from the report!
+                        </pre>
+                    </div>
                 </div>
             </div>
-        </footer>
-    </main>
+        </div>
+    </section>
+
+    <!-- Features Section -->
+    <section id="features" class="py-20 bg-gray-900">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-5xl font-black mb-4">Powerful Features</h2>
+                <p class="text-xl text-gray-400">Everything you need for professional forensic investigations</p>
+            </div>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+                <!-- Feature 1 -->
+                <div class="glass rounded-2xl p-8 feature-card">
+                    <div class="text-5xl mb-4">🧠</div>
+                    <h3 class="text-2xl font-bold mb-3">Memory Forensics</h3>
+                    <p class="text-gray-400 mb-4">22 specialized profiles for Windows & Linux memory analysis powered by Volatility 3.</p>
+                    <ul class="text-sm text-gray-500 space-y-2">
+                        <li>✓ APT hunting</li>
+                        <li>✓ Ransomware detection</li>
+                        <li>✓ Malware analysis</li>
+                        <li>✓ CTF mode</li>
+                    </ul>
+                </div>
+                
+                <!-- Feature 2 -->
+                <div class="glass rounded-2xl p-8 feature-card">
+                    <div class="text-5xl mb-4">💾</div>
+                    <h3 class="text-2xl font-bold mb-3">Disk Forensics</h3>
+                    <p class="text-gray-400 mb-4">18 specialized profiles with smart filesystem detection for any disk image.</p>
+                    <ul class="text-sm text-gray-500 space-y-2">
+                        <li>✓ Auto-detects NTFS, EXT4, FAT</li>
+                        <li>✓ Deleted file recovery</li>
+                        <li>✓ Timeline generation</li>
+                        <li>✓ Credential extraction</li>
+                    </ul>
+                </div>
+                
+                <!-- Feature 3 -->
+                <div class="glass rounded-2xl p-8 feature-card">
+                    <div class="text-5xl mb-4">📊</div>
+                    <h3 class="text-2xl font-bold mb-3">Interactive Reports</h3>
+                    <p class="text-gray-400 mb-4">Beautiful HTML reports with file download buttons and search capabilities.</p>
+                    <ul class="text-sm text-gray-500 space-y-2">
+                        <li>✓ Click to download files</li>
+                        <li>✓ Search & filter</li>
+                        <li>✓ Beautiful UI</li>
+                        <li>✓ Export to JSON/CSV</li>
+                    </ul>
+                </div>
+                
+                <!-- Feature 4 -->
+                <div class="glass rounded-2xl p-8 feature-card">
+                    <div class="text-5xl mb-4">🤖</div>
+                    <h3 class="text-2xl font-bold mb-3">AI Integration</h3>
+                    <p class="text-gray-400 mb-4">Natural language forensic commands powered by OpenRouter & DeepSeek.</p>
+                    <ul class="text-sm text-gray-500 space-y-2">
+                        <li>✓ Natural language queries</li>
+                        <li>✓ AI-powered analysis</li>
+                        <li>✓ GPT-4 & Claude support</li>
+                        <li>✓ Smart evidence extraction</li>
+                    </ul>
+                </div>
+                
+                <!-- Feature 5 -->
+                <div class="glass rounded-2xl p-8 feature-card">
+                    <div class="text-5xl mb-4">🏆</div>
+                    <h3 class="text-2xl font-bold mb-3">CTF Optimized</h3>
+                    <p class="text-gray-400 mb-4">Auto-detect flags in memory dumps and disk images for CTF competitions.</p>
+                    <ul class="text-sm text-gray-500 space-y-2">
+                        <li>✓ Auto flag detection</li>
+                        <li>✓ CTF{}, FLAG{}, HTB{}</li>
+                        <li>✓ Hash detection (MD5/SHA)</li>
+                        <li>✓ Competition ready</li>
+                    </ul>
+                </div>
+                
+                <!-- Feature 6 -->
+                <div class="glass rounded-2xl p-8 feature-card">
+                    <div class="text-5xl mb-4">⚡</div>
+                    <h3 class="text-2xl font-bold mb-3">Lightning Fast</h3>
+                    <p class="text-gray-400 mb-4">Optimized performance with resumable scans and smart caching.</p>
+                    <ul class="text-sm text-gray-500 space-y-2">
+                        <li>✓ Resume capability</li>
+                        <li>✓ Smart caching</li>
+                        <li>✓ Parallel processing</li>
+                        <li>✓ Minimal profiles (30s)</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Profiles Section -->
+    <section id="profiles" class="py-20 bg-gray-800">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-5xl font-black mb-4">Scan Profiles</h2>
+                <p class="text-xl text-gray-400">40+ specialized profiles for every forensic scenario</p>
+            </div>
+            
+            <div class="grid grid-cols-1 lg:grid-cols-2 gap-8">
+                <!-- Memory Profiles -->
+                <div class="glass rounded-2xl p-8">
+                    <h3 class="text-3xl font-bold mb-6 gradient-bg bg-clip-text text-transparent">Memory Scans</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center p-4 bg-white/5 rounded-lg">
+                            <div>
+                                <div class="font-bold">triage</div>
+                                <div class="text-sm text-gray-400">Incident response essentials</div>
+                            </div>
+                            <span class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm">2-5m</span>
+                        </div>
+                        <div class="flex justify-between items-center p-4 bg-white/5 rounded-lg">
+                            <div>
+                                <div class="font-bold">ctf_windows</div>
+                                <div class="text-sm text-gray-400">CTF flag hunting</div>
+                            </div>
+                            <span class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm">2-5m</span>
+                        </div>
+                        <div class="flex justify-between items-center p-4 bg-white/5 rounded-lg">
+                            <div>
+                                <div class="font-bold">apt_hunting</div>
+                                <div class="text-sm text-gray-400">Advanced persistent threats</div>
+                            </div>
+                            <span class="px-3 py-1 bg-yellow-500/20 text-yellow-400 rounded-full text-sm">10-15m</span>
+                        </div>
+                        <div class="flex justify-between items-center p-4 bg-white/5 rounded-lg">
+                            <div>
+                                <div class="font-bold">ransomware</div>
+                                <div class="text-sm text-gray-400">Ransomware analysis</div>
+                            </div>
+                            <span class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm">5-10m</span>
+                        </div>
+                        <div class="text-center pt-4">
+                            <a href="https://github.com/arazazi/unfold/blob/main/Documentation.md" 
+                               class="text-blue-400 hover:underline">View all 22 profiles →</a>
+                        </div>
+                    </div>
+                </div>
+                
+                <!-- Disk Profiles -->
+                <div class="glass rounded-2xl p-8">
+                    <h3 class="text-3xl font-bold mb-6 gradient-bg bg-clip-text text-transparent">Disk Scans</h3>
+                    <div class="space-y-4">
+                        <div class="flex justify-between items-center p-4 bg-white/5 rounded-lg">
+                            <div>
+                                <div class="font-bold">ctf</div>
+                                <div class="text-sm text-gray-400">CTF flag hunting</div>
+                            </div>
+                            <span class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm">3-5m</span>
+                        </div>
+                        <div class="flex justify-between items-center p-4 bg-white/5 rounded-lg">
+                            <div>
+                                <div class="font-bold">credentials</div>
+                                <div class="text-sm text-gray-400">Password extraction</div>
+                            </div>
+                            <span class="px-3 py-1 bg-green-500/20 text-green-400 rounded-full text-sm">3-5m</span>
+                        </div>
+                        <div class="flex justify-between items-center p-4 bg-white/5 rounded-lg">
+                            <div>
+                                <div class="font-bold">deleted</div>
+                                <div class="text-sm text-gray-400">Deleted file recovery</div>
+                            </div>
+                            <span class="px-3 py-1 bg-yellow-500/20 text-yellow-400 rounded-full text-sm">10-20m</span>
+                        </div>
+                        <div class="flex justify-between items-center p-4 bg-white/5 rounded-lg">
+                            <div>
+                                <div class="font-bold">timeline</div>
+                                <div class="text-sm text-gray-400">Complete MAC timeline</div>
+                            </div>
+                            <span class="px-3 py-1 bg-yellow-500/20 text-yellow-400 rounded-full text-sm">15-30m</span>
+                        </div>
+                        <div class="text-center pt-4">
+                            <a href="https://github.com/arazazi/unfold/blob/main/Documentation.md" 
+                               class="text-blue-400 hover:underline">View all 18 profiles →</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Installation Section -->
+    <section id="install" class="py-20 bg-gray-900">
+        <div class="max-w-4xl mx-auto px-6">
+            <div class="text-center mb-16">
+                <h2 class="text-5xl font-black mb-4">Quick Installation</h2>
+                <p class="text-xl text-gray-400">Get started in under 2 minutes</p>
+            </div>
+            
+            <div class="glass rounded-2xl p-8 mb-8">
+                <div class="flex items-center gap-2 mb-4">
+                    <div class="w-3 h-3 rounded-full bg-red-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-yellow-500"></div>
+                    <div class="w-3 h-3 rounded-full bg-green-500"></div>
+                    <span class="ml-4 text-gray-400 text-sm mono">terminal</span>
+                </div>
+                <pre class="text-sm mono text-green-400 leading-relaxed">
+<span class="text-blue-400">$</span> git clone https://github.com/arazazi/unfold.git
+<span class="text-blue-400">$</span> cd unfold
+<span class="text-blue-400">$</span> chmod +x DEPLOY.sh && ./DEPLOY.sh
+<span class="text-blue-400">$</span> python3 unfoldV3.py --check-deps
+
+<span class="text-gray-500"># Memory analysis</span>
+<span class="text-blue-400">$</span> python3 unfoldV3.py memory.dmp --scan triage --html -o report.html
+
+<span class="text-gray-500"># Disk analysis</span>
+<span class="text-blue-400">$</span> python3 unfoldV3.py disk.dd --scan-disk ctf --html -o disk.html
+                </pre>
+            </div>
+            
+            <div class="text-center">
+                <a href="https://github.com/arazazi/unfold" target="_blank"
+                   class="inline-block px-8 py-4 gradient-bg rounded-xl font-bold text-lg hover:glow transition-all">
+                    Get Started on GitHub
+                </a>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="py-12 bg-gray-950 border-t border-gray-800">
+        <div class="max-w-7xl mx-auto px-6">
+            <div class="flex flex-col md:flex-row justify-between items-center gap-6">
+                <div class="flex items-center gap-3">
+                    <div class="h-10 w-10 gradient-bg rounded-lg flex items-center justify-center font-bold text-white italic text-xl">
+                        U
+                    </div>
+                    <div>
+                        <div class="font-bold text-lg">UNFOLD v3.0 ULTRA</div>
+                        <div class="text-sm text-gray-500 mono">Professional Forensic Suite</div>
+                    </div>
+                </div>
+                
+                <div class="flex gap-6 text-gray-400">
+                    <a href="https://github.com/arazazi/unfold" target="_blank" class="hover:text-white transition-colors">
+                        GitHub
+                    </a>
+                    <a href="https://github.com/arazazi/unfold/blob/main/Documentation.md" target="_blank" class="hover:text-white transition-colors">
+                        Documentation
+                    </a>
+                    <a href="https://github.com/arazazi/unfold/issues" target="_blank" class="hover:text-white transition-colors">
+                        Issues
+                    </a>
+                </div>
+            </div>
+            
+            <div class="mt-8 pt-8 border-t border-gray-800 text-center text-gray-500 text-sm">
+                <p>Built with ❤️ by Azazi | 2026 | MIT License</p>
+                <p class="mt-2">For forensic investigators, CTF players, and security researchers</p>
+            </div>
+        </div>
+    </footer>
 
     <script>
-        function showCodeTab(button, targetId) {
-            const tabsContainer = button.closest('.code-tabs');
-            const buttons = tabsContainer.querySelectorAll('.code-tab-button');
-            const contents = tabsContainer.querySelectorAll('.code-tab-content');
-
-            buttons.forEach(btn => btn.classList.remove('active'));
-            contents.forEach(content => content.classList.add('hidden'));
-
-            button.classList.add('active');
-            document.getElementById(targetId).classList.remove('hidden');
-            document.getElementById(targetId).classList.add('active');
-        }
-        
-        document.addEventListener('DOMContentLoaded', () => {
-            document.querySelectorAll('.code-tabs').forEach(tabsContainer => {
-                const firstButton = tabsContainer.querySelector('.code-tab-button');
-                const firstContent = tabsContainer.querySelector('.code-tab-content');
-                if (firstButton && firstContent) {
-                    firstButton.classList.add('active');
-                    firstContent.classList.remove('hidden');
-                    firstContent.classList.add('active');
+        // Smooth scrolling
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                const target = document.querySelector(this.getAttribute('href'));
+                if (target) {
+                    target.scrollIntoView({ behavior: 'smooth', block: 'start' });
                 }
             });
         });
     </script>
+
 </body>
 </html>
